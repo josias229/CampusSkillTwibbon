@@ -20,17 +20,17 @@
                         montserrat: ['Montserrat', 'sans-serif'],
                     },
                     colors: {
-                        primary: '#006ef2',
-                        'primary-light': '#4c70b6',
-                        'primary-dark': '#0150d9',
-                        accent: '#006ef2',
-                        'dark-bg': '#080b1a',
+                        primary: '#1C529B',
+                        'primary-light': '#3A75C4',
+                        'primary-dark': '#12386E',
+                        accent: '#48C774',
+                        'dark-bg': '#0A0F1A',
                         surface: '#FFFFFF',
-                        'surface-alt': '#f2f4f5',
-                        'bg-body': '#f2f4f5',
+                        'surface-alt': '#F1F5F9',
+                        'bg-body': '#F8FAFC',
                         text: {
-                            main: '#011031',
-                            muted: '#4c4f5f'
+                            main: '#0F172A',
+                            muted: '#64748B'
                         }
                     },
                     boxShadow: {
@@ -43,7 +43,7 @@
     </script>
     
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f2f4f5; color: #011031; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: theme('colors.bg-body'); color: theme('colors.text.main'); }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
@@ -52,11 +52,11 @@
         header.scrolled { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(28, 82, 155, 0.08); padding: 16px 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         .navbar { display: flex; justify-content: space-between; align-items: center; max-width: 1240px; margin: 0 auto; padding: 0 24px; }
         .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; color: #FFFFFF; text-decoration: none; display: flex; align-items: center; gap: 12px; transition: color 0.3s ease; }
-        header.scrolled .logo { color: #011031; }
-        .logo .logo-scrolled { display: none; }
-        .logo .logo-default { display: block; }
-        header.scrolled .logo .logo-scrolled { display: block; }
-        header.scrolled .logo .logo-default { display: none; }
+        header.scrolled .logo { color: #0F172A; }
+        .logo i { color: #48C774; font-size: 1.6rem; }
+        header.scrolled .logo i { color: #1C529B; }
+        .logo span { color: #FFFFFF; opacity: 0.9; font-weight: 400; }
+        header.scrolled .logo span { color: #1C529B; opacity: 1; }
         .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; margin: 0; padding: 0; }
         .nav-links a { text-decoration: none; color: rgba(255, 255, 255, 0.95); font-weight: 600; font-size: 0.95rem; transition: 0.3s ease; position: relative; }
         header.scrolled .nav-links a { color: #64748B; }
@@ -67,23 +67,12 @@
         .btn-ghost:hover { background: rgba(255, 255, 255, 0.25); }
         header.scrolled .btn-ghost:hover { background: rgba(28, 82, 155, 0.15); }
 
-        /* Mobile Hamburger & Navigation Responsiveness */
-        #mobileMenuBtn { display: none; flex-direction: column; justify-content: space-between; width: 24px; height: 18px; background: none; border: none; cursor: pointer; padding: 0; z-index: 1010; }
-        #mobileMenuBtn span { display: block; height: 2px; width: 100%; border-radius: 9px; opacity: 1; left: 0; transform: rotate(0deg); transition: .25s ease-in-out; }
-        header.scrolled #mobileMenuBtn span { background: #011031; }
-        header:not(.scrolled) #mobileMenuBtn span { background: #FFFFFF; }
-        
-        #mobileMenuBtn.open span:nth-child(1) { transform: rotate(45deg); transform-origin: 10% 10%; background: #FFFFFF !important; }
-        #mobileMenuBtn.open span:nth-child(2) { opacity: 0; }
-        #mobileMenuBtn.open span:nth-child(3) { transform: rotate(-45deg); transform-origin: 10% 90%; background: #FFFFFF !important; }
-
-        @media (max-width: 1023px) {
-            .nav-links { display: none !important; }
-            #mobileMenuBtn { display: flex !important; }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
         }
 
         /* Hero Carousel */
-        .hero-carousel { position: relative; height: 100vh; min-height: 700px; overflow: hidden; background-color: #080b1a; }
+        .hero-carousel { position: relative; height: 100vh; min-height: 700px; overflow: hidden; background-color: theme('colors.dark-bg'); }
         .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease-in-out; background-size: cover; background-position: center; z-index: 1; }
         .slide.active { opacity: 1; z-index: 2; }
         .slider-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10, 15, 26, 0.95) 0%, rgba(10, 15, 26, 0.7) 50%, rgba(10, 15, 26, 0.3) 100%); z-index: 1; pointer-events: none;}
@@ -99,44 +88,20 @@
 
     <!-- HEADER / NAVIGATION -->
     <header id="mainHeader">
-        <div class="container navbar relative z-[1001]">
-            <a href="index.html" class="logo">
-                <img src="logoCSCLabsWhite.png" alt="CSC Labs" class="h-10 logo-default">
-                <img src="logoCSCLabs.png" alt="CSC Labs" class="h-10 logo-scrolled">
+        <div class="container navbar">
+            <a href="#" class="logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+                CSC <span>Labs</span>
             </a>
-            <ul class="nav-links"> 
-                <li><a href="concept.html">Le Concept</a></li>
-                <li><a href="guildes.html">Guildes</a></li>
-                <li><a href="projets.html">Projets</a></li>
-                <li><a href="evenements.html">Événements</a></li>
-                <li><a href="entreprises.html">Entreprises</a></li>
-                <li><a href="login.html" class="btn btn-ghost" style="padding: 10px 24px;">Connexion</a></li>
+            <ul class="nav-links">
+                <li><a href="#concept">Le Concept</a></li>
+                <li><a href="#guildes">Guildes</a></li>
+                <li><a href="#projets">Projets</a></li>
+                <li><a href="#entreprises">Entreprises</a></li>
+                <li><a href="#" class="btn btn-ghost" style="padding: 10px 24px;">Connexion</a></li>
             </ul>
-            
-            <!-- Hamburger Menu Button -->
-            <button id="mobileMenuBtn" aria-label="Toggle Menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
         </div>
     </header>
-
-    <!-- Mobile Menu Overlay -->
-    <div id="mobileMenu" class="fixed inset-0 bg-[#080b1a]/95 backdrop-blur-xl z-[1005] flex flex-col justify-center items-center opacity-0 pointer-events-none transition-all duration-500">
-        <!-- Close background aura -->
-        <div class="absolute w-[300px] h-[300px] bg-primary/10 rounded-full blur-[100px] -top-20 -left-20 pointer-events-none"></div>
-        <div class="absolute w-[300px] h-[300px] bg-[#006ef2]/10 rounded-full blur-[100px] -bottom-20 -right-20 pointer-events-none"></div>
-        
-        <ul class="flex flex-col items-center gap-8 text-center text-xl font-bold">
-            <li><a href="concept.html" class="text-white/80 hover:text-white transition-colors">Le Concept</a></li>
-            <li><a href="guildes.html" class="text-white/80 hover:text-white transition-colors">Guildes</a></li>
-            <li><a href="projets.html" class="text-white/80 hover:text-white transition-colors">Projets</a></li>
-            <li><a href="evenements.html" class="text-white/80 hover:text-white transition-colors">Événements</a></li>
-            <li><a href="entreprises.html" class="text-white/80 hover:text-white transition-colors">Entreprises</a></li>
-            <li><a href="login.html" class="bg-primary hover:bg-primary-light text-white px-8 py-3 rounded-xl transition-all shadow-md inline-block">Connexion</a></li>
-        </ul>
-    </div>
 
     <main>
         <!-- HERO CAROUSEL -->
@@ -560,7 +525,7 @@
                 <!-- Brand -->
                 <div class="lg:col-span-4 flex flex-col gap-6">
                     <a href="#" class="flex items-center gap-3 text-2xl font-extrabold text-white tracking-tight">
-                        <img src="logoCSCLabsWhite.png" alt="CSC Labs" class="h-12">
+                        <i class="fa-solid fa-graduation-cap"></i> CSC Labs
                     </a>
                     <p class="text-white/60 text-sm leading-relaxed max-w-sm">L'écosystème numérique qui transforme la jeunesse africaine en force technologique.</p>
                     <div class="mt-2">
@@ -578,10 +543,10 @@
                 <div class="lg:col-span-2 lg:col-start-6">
                     <h4 class="text-white font-bold mb-6 text-sm uppercase tracking-wider">Plateforme</h4>
                     <ul class="space-y-4 text-white/60 font-medium text-sm">
-                        <li><a href="concept.html" class="hover:text-white transition-colors">Comment ça marche</a></li>
-                        <li><a href="guildes.html" class="hover:text-white transition-colors">Les Guildes</a></li>
-                        <li><a href="projets.html" class="hover:text-white transition-colors">Projets réalisés</a></li>
-                        <li><a href="login.html" class="hover:text-white transition-colors">Talent Hub (Login)</a></li>
+                        <li><a href="#concept" class="hover:text-white transition-colors">Comment ça marche</a></li>
+                        <li><a href="#guildes" class="hover:text-white transition-colors">Les Guildes</a></li>
+                        <li><a href="#projets" class="hover:text-white transition-colors">Projets réalisés</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Talent Hub (Login)</a></li>
                     </ul>
                 </div>
                 
@@ -598,10 +563,10 @@
                 <div class="lg:col-span-3">
                     <h4 class="text-white font-bold mb-6 text-sm uppercase tracking-wider">Entreprises</h4>
                     <ul class="space-y-4 text-white/60 font-medium text-sm">
-                        <li><a href="entreprises.html" class="hover:text-white transition-colors">Proposer une mission</a></li>
-                        <li><a href="entreprises.html" class="hover:text-white transition-colors">Recruter un talent</a></li>
-                        <li><a href="entreprises.html" class="hover:text-white transition-colors">Devenir sponsor</a></li>
-                        <li><a href="entreprises.html" class="hover:text-white transition-colors">Espace B2B</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Proposer une mission</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Recruter un talent</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Devenir sponsor</a></li>
+                        <li><a href="#entreprises" class="hover:text-white transition-colors">Espace B2B</a></li>
                     </ul>
                 </div>
             </div>
@@ -716,35 +681,6 @@
                 scale: 0.95, opacity: 0, duration: 1, ease: "power2.out"
             });
         });
-        // Mobile Menu Logic
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        
-        if (mobileMenuBtn && mobileMenu) {
-            mobileMenuBtn.addEventListener('click', () => {
-                const isOpen = mobileMenuBtn.classList.toggle('open');
-                if (isOpen) {
-                    mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
-                    mobileMenu.classList.add('opacity-100');
-                    document.body.style.overflow = 'hidden'; // prevent background scrolling
-                } else {
-                    mobileMenu.classList.remove('opacity-100');
-                    mobileMenu.classList.add('opacity-0', 'pointer-events-none');
-                    document.body.style.overflow = '';
-                }
-            });
-            
-            // Close mobile menu when clicking on links
-            const mobileLinks = mobileMenu.querySelectorAll('a');
-            mobileLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    mobileMenuBtn.classList.remove('open');
-                    mobileMenu.classList.remove('opacity-100');
-                    mobileMenu.classList.add('opacity-0', 'pointer-events-none');
-                    document.body.style.overflow = '';
-                });
-            });
-        }
     </script>
 </body>
 </html>

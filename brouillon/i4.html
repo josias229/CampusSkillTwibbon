@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>CSC Labs | Écosystème de Talents Élite</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Couleurs principales (Sobres et professionnelles) */
+            --primary: #1C529B;      
+            --primary-light: #3A75C4; 
+            --primary-dark: #12386E;
+            --accent: #48C774;       
+            
+            /* Nuances de fond et de texte */
+            --dark-bg: #0A0F1A;
+            --surface: #FFFFFF;
+            --surface-alt: #F1F5F9;
+            --bg-body: #F8FAFC;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            
+            /* Effets et ombres */
+            --glass: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(28, 82, 155, 0.1);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 30px rgba(28, 82, 155, 0.08);
+            --shadow-lg: 0 24px 50px rgba(10, 15, 26, 0.15);
+            
+            /* Footer Discord */
+            --footer-bg: #1C529B; 
+            --footer-text: #FFFFFF;
+            --footer-link: rgba(255, 255, 255, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ========== NAVIGATION ========== */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: transparent;
+            border-bottom: 1px solid transparent;
+            padding: 20px 0;
+            transition: all 0.4s ease;
+        }
+
+        header.scrolled {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 12px 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--surface);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.3s ease;
+        }
+
+        header.scrolled .logo {
+            color: var(--text-main);
+        }
+
+        .logo i { color: var(--accent); }
+        header.scrolled .logo i { color: var(--primary); }
+        .logo span { color: var(--surface); opacity: 0.8; }
+        header.scrolled .logo span { color: var(--primary); opacity: 1; }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: 0.3s;
+        }
+
+        header.scrolled .nav-links a {
+            color: var(--text-muted);
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+        header.scrolled .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* ========== BOUTONS ========== */
+        .btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white !important;
+            box-shadow: 0 8px 20px rgba(28, 82, 155, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(28, 82, 155, 0.35);
+            background: var(--primary-light);
+        }
+
+        .btn-white {
+            background: var(--surface);
+            color: var(--text-main) !important;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-white:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+            color: var(--primary) !important;
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--surface) !important;
+            backdrop-filter: blur(5px);
+        }
+        
+        header.scrolled .btn-ghost {
+            background: rgba(28, 82, 155, 0.08);
+            color: var(--primary) !important;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        header.scrolled .btn-ghost:hover {
+            background: rgba(28, 82, 155, 0.15);
+        }
+
+        /* ========== HERO CAROUSEL ========== */
+        .hero-carousel {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            background-color: var(--dark-bg);
+        }
+
+        .slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* Overlay très sombre pour garantir la lisibilité du texte blanc */
+        .slider-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(10, 15, 26, 0.9) 0%, rgba(10, 15, 26, 0.5) 100%);
+            z-index: 2;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            padding-top: 60px;
+        }
+
+        .hero-tag {
+            background: rgba(72, 199, 116, 0.15);
+            color: var(--accent);
+            padding: 8px 18px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(72, 199, 116, 0.3);
+        }
+
+        .hero-carousel h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -1.5px;
+            margin-bottom: 25px;
+            color: var(--surface);
+        }
+
+        .hero-carousel p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+            max-width: 600px;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* ========== STATS SECTION ========== */
+        .stats-section {
+            position: relative;
+            z-index: 20;
+            margin-top: -60px; /* Chevauchement sur le hero */
+            padding-bottom: 80px;
+        }
+
+        .stats-container {
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 50px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--glass-border);
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 3rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .stat-item p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ========== TITRES DE SECTIONS ========== */
+        .section-padding {
+            padding: 100px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section-tag {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .section-header h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -1px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.15rem;
+        }
+
+        /* ========== LE CONCEPT (COMMENT CA MARCHE) ========== */
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            position: relative;
+        }
+
+        /* Ligne de connexion pour Desktop */
+        .concept-grid::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: dashed 2px var(--glass-border);
+            z-index: 0;
+        }
+
+        .step-card {
+            background: var(--surface);
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--glass-border);
+            transition: transform 0.3s;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--surface);
+            border: 2px solid var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary);
+            margin: 0 auto 24px;
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 2px solid var(--surface);
+        }
+
+        .step-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .step-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ========== GUILDE CARDS ========== */
+        .bg-alt {
+            background-color: var(--surface-alt);
+        }
+
+        .guildes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .guilde-card {
+            background: var(--surface);
+            border: 1px solid var(--glass-border);
+            padding: 40px;
+            border-radius: 24px;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .guilde-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-8px);
+        }
+
+        .guilde-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(28, 82, 155, 0.06);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .guilde-card:hover .guilde-icon {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .guilde-card h3 {
+            margin-bottom: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .guilde-card p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            flex-grow: 1;
+        }
+
+        .member-count {
+            margin-top: 24px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-top: 20px;
+            border-top: 1px solid #EDF2F7;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        /* ========== PROJETS & IMPACT ========== */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .project-card {
+            background: var(--surface);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-5px);
+        }
+
+        .project-img {
+            width: 100%;
+            height: 200px;
+            background-color: var(--primary-light);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .project-category {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(10, 15, 26, 0.7);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            backdrop-filter: blur(4px);
+        }
+
+        .project-content {
+            padding: 24px;
+        }
+
+        .project-content h3 {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .project-content p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .project-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--surface-alt);
+            padding-top: 15px;
+        }
+
+        .project-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .project-link:hover { text-decoration: underline; }
+
+        /* ========== ESPACE ENTREPRISES ========== */
+        .b2b-section {
+            background: var(--dark-bg);
+            color: white;
+            border-radius: 32px;
+            padding: 80px 60px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            margin: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .b2b-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(28, 82, 155, 0.4), transparent 70%);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+            pointer-events: none;
+        }
+
+        .b2b-content h2 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .b2b-content p {
+            color: #94A3B8;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .b2b-features {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+
+        .b2b-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+        }
+
+        .b2b-features i {
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        /* ========== CALL TO ACTION ========== */
+        .cta-box {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 32px;
+            padding: 80px 40px;
+            text-align: center;
+            color: white;
+            position: relative;
+            z-index: 1;
+            box-shadow: var(--shadow-md);
+        }
+
+        .cta-box h2 {
+            font-size: 3.2rem;
+            margin-bottom: 20px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        /* ========== FOOTER DISCORD STYLE ========== */
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 80px 0 0 0;
+            margin-top: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr repeat(4, 1fr);
+            gap: 40px;
+            padding-bottom: 60px;
+        }
+
+        .footer-brand {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .footer-social a {
+            color: white;
+            font-size: 1.4rem;
+            transition: transform 0.2s;
+        }
+        .footer-social a:hover { transform: translateY(-3px); }
+
+        .footer-col h4 {
+            color: white;
+            font-weight: 700;
+            margin-bottom: 24px;
+            font-size: 1.05rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .footer-col a {
+            color: var(--footer-link);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+        .footer-col a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        /* LE TEXTE GEANT STYLE DISCORD */
+        .discord-huge-text-container {
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 40px;
+            padding-bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .footer-bottom-bar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 40px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            max-width: 1240px;
+            padding-left: 24px;
+            padding-right: 24px;
+        }
+
+        .discord-huge-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15vw; 
+            font-weight: 900;
+            color: white;
+            line-height: 0.75;
+            letter-spacing: -0.04em;
+            text-align: center;
+            width: 100%;
+            margin: 0;
+            user-select: none; 
+            text-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            opacity: 0.95;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1024px) {
+            .hero-carousel h1 { font-size: 3.5rem; }
+            .stats-container { grid-template-columns: repeat(2, 1fr); padding: 40px; }
+            .concept-grid { grid-template-columns: 1fr; gap: 30px; }
+            .concept-grid::before { display: none; }
+            .projects-grid { grid-template-columns: repeat(2, 1fr); }
+            .b2b-section { grid-template-columns: 1fr; padding: 50px 30px; text-align: center; }
+            .b2b-features li { justify-content: center; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .footer-brand { grid-column: span 2; margin-bottom: 30px; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero-carousel h1 { font-size: 2.8rem; }
+            .hero-buttons { flex-direction: column; width: 100%; }
+            .hero-buttons .btn { width: 100%; }
+            .stats-container { grid-template-columns: 1fr; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .cta-box { padding: 50px 20px; }
+            .cta-box h2 { font-size: 2.2rem; }
+            .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+            .footer-brand { grid-column: 1; }
+            .discord-huge-text { font-size: 20vw; }
+            .footer-bottom-bar { flex-direction: column; align-items: center; gap: 15px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<header id="mainHeader">
+    <div class="container navbar">
+        <a href="#" class="logo">
+            <i class="fa-solid fa-graduation-cap"></i>
+            CSC <span>Labs</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#concept">Le Concept</a></li>
+            <li><a href="#guildes">Guildes</a></li>
+            <li><a href="#projets">Projets</a></li>
+            <li><a href="#entreprises">Entreprises</a></li>
+            <li><a href="#" class="btn btn-ghost" style="padding: 10px 20px;">Connexion</a></li>
+        </ul>
+    </div>
+</header>
+
+<main>
+    <!-- HERO CAROUSEL -->
+    <section class="hero-carousel">
+        <div class="slider">
+            <!-- Slide 1 -->
+            <div class="slide active" style="background-image: url('https://placehold.co/1920x1080/1C529B/FFFFFF?text=Collaboration+Tech');"></div>
+            <!-- Slide 2 -->
+            <div class="slide" style="background-image: url('https://placehold.co/1920x1080/0A0F1A/FFFFFF?text=Build+Africa');"></div>
+            <!-- Slide 3 -->
+            <div class="slide" style="background-image: url('https://placehold.co/1920x1080/12386E/FFFFFF?text=Mentorat+Elite');"></div>
+            
+            <div class="slider-overlay"></div>
+        </div>
+
+        <div class="container relative" style="z-index: 10;">
+            <div class="hero-content">
+                <div class="hero-tag">
+                    <i class="fa-solid fa-bolt"></i> Saison 2026 Ouverte
+                </div>
+                <h1>Au-delà du diplôme, <br>forgez vos compétences.</h1>
+                <p>Rejoignez l'écosystème d'élite qui transforme les ambitions étudiantes en solutions technologiques concrètes pour le continent. Développez votre portfolio par l'action.</p>
+                <div class="hero-buttons">
+                    <a href="#" class="btn btn-primary">Rejoindre l'aventure <i class="fa-solid fa-arrow-right"></i></a>
+                    <a href="#concept" class="btn btn-white">Découvrir le fonctionnement</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="stats-container">
+                <div class="stat-item">
+                    <h3 id="statStudents">0</h3>
+                    <p>Talents Actifs</p>
+                </div>
+                <div class="stat-item">
+                    <h3 id="statGuildes">0</h3>
+                    <p>Guildes Expertes</p>
+                </div>
+                <div class="stat-item">
+                    <h3 id="statProjets">0</h3>
+                    <p>Projets Livrés</p>
+                </div>
+                <div class="stat-item">
+                    <h3 id="statEmploy">0</h3>
+                    <p>Taux d'insertion</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LE CONCEPT / COMMENT CA MARCHE -->
+    <section id="concept" class="section-padding bg-alt">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Le Système</span>
+                <h2>De novice à expert,<br>une progression par l'action.</h2>
+                <p>Un parcours pensé pour vous confronter immédiatement aux réalités du marché de l'emploi technologique.</p>
+            </div>
+
+            <div class="concept-grid">
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fa-solid fa-compass"></i>
+                        <div class="step-number">1</div>
+                    </div>
+                    <h3>Rejoignez une Guilde</h3>
+                    <p>Passez le test d'orientation, choisissez votre spécialité (Dev, Design, Data...) et intégrez votre équipe de mentors et pairs.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fa-solid fa-code-branch"></i>
+                        <div class="step-number">2</div>
+                    </div>
+                    <h3>Relevez des défis</h3>
+                    <p>Participez aux Build Weeks, résolvez des problèmes concrets, gagnez des points XP et montez en niveau.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <div class="step-number">3</div>
+                    </div>
+                    <h3>Bâtissez votre carrière</h3>
+                    <p>Un portfolio validé vaut mieux qu'un CV. Débloquez des missions réelles et rémunérées proposées par nos partenaires.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GUILDES -->
+    <section id="guildes" class="section-padding">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Communautés</span>
+                <h2>Choisissez votre arme</h2>
+                <p>Des pôles d'excellence encadrés par des professionnels pour maîtriser les stacks les plus demandées.</p>
+            </div>
+            <div class="guildes-grid">
+                <div class="guilde-card">
+                    <div class="guilde-icon"><i class="fa-solid fa-code"></i></div>
+                    <h3>Engineering</h3>
+                    <p>Architecture logicielle, développement Full-stack, mobile et Web3. Le cœur technique de nos solutions.</p>
+                    <div class="member-count"><div class="dot"></div> 450 Experts connectés</div>
+                </div>
+                <div class="guilde-card">
+                    <div class="guilde-icon"><i class="fa-solid fa-bezier-curve"></i></div>
+                    <h3>Creative Design</h3>
+                    <p>Expériences UI/UX immersives, Design système, identité visuelle et illustration numérique (Figma).</p>
+                    <div class="member-count"><div class="dot"></div> 210 Créatifs connectés</div>
+                </div>
+                <div class="guilde-card">
+                    <div class="guilde-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                    <h3>Product & Growth</h3>
+                    <p>Stratégie produit, Data analysis, SEO, acquisition utilisateur et gestion de communautés.</p>
+                    <div class="member-count"><div class="dot"></div> 180 Stratèges connectés</div>
+                </div>
+                <div class="guilde-card">
+                    <div class="guilde-icon"><i class="fa-solid fa-brain"></i></div>
+                    <h3>Data & I.A.</h3>
+                    <p>Machine Learning, intégration d'API (OpenAI, Anthropic), automatisation et traitement de données massives.</p>
+                    <div class="member-count"><div class="dot"></div> 120 Spécialistes connectés</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJETS & IMPACT -->
+    <section id="projets" class="section-padding bg-alt">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Portfolio</span>
+                <h2>Des projets à fort impact</h2>
+                <p>Découvrez ce que nos étudiants ont construit lors des dernières Build Weeks.</p>
+            </div>
+
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-img" style="background-image: url('https://placehold.co/600x400/1C529B/FFFFFF?text=AgriConnect');">
+                        <span class="project-category">Web App</span>
+                    </div>
+                    <div class="project-content">
+                        <h3>AgriConnect Bénin</h3>
+                        <p>Plateforme de mise en relation directe entre producteurs agricoles locaux et distributeurs urbains.</p>
+                        <div class="project-footer">
+                            <span style="font-size: 0.8rem; font-weight: bold; color: var(--text-muted);">Guilde: Engineering</span>
+                            <a href="#" class="project-link">Voir le projet <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-img" style="background-image: url('https://placehold.co/600x400/0A0F1A/FFFFFF?text=EduTrack');">
+                        <span class="project-category">Mobile</span>
+                    </div>
+                    <div class="project-content">
+                        <h3>EduTrack Tracker</h3>
+                        <p>Application de suivi de l'assiduité scolaire pour les lycées publics via des QR codes.</p>
+                        <div class="project-footer">
+                            <span style="font-size: 0.8rem; font-weight: bold; color: var(--text-muted);">Guilde: Data & IA</span>
+                            <a href="#" class="project-link">Voir le projet <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-img" style="background-image: url('https://placehold.co/600x400/3A75C4/FFFFFF?text=FinHealth');">
+                        <span class="project-category">Design System</span>
+                    </div>
+                    <div class="project-content">
+                        <h3>FinHealth UI Kit</h3>
+                        <p>Refonte de l'interface utilisateur d'une micro-finance locale pour faciliter l'accès aux prêts.</p>
+                        <div class="project-footer">
+                            <span style="font-size: 0.8rem; font-weight: bold; color: var(--text-muted);">Guilde: Creative Design</span>
+                            <a href="#" class="project-link">Voir le projet <i class="fa-solid fa-arrow-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="#" class="btn btn-ghost" style="color: var(--primary) !important; border: 1px solid var(--glass-border);">Explorer la galerie complète</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ENTREPRISES -->
+    <section id="entreprises" class="container">
+        <div class="b2b-section">
+            <div class="b2b-content">
+                <span class="section-tag" style="color: var(--accent);">Partenaires</span>
+                <h2>Recrutez des talents éprouvés.</h2>
+                <p>Ne vous fiez plus aux CV standards. Identifiez les meilleurs éléments grâce à leurs performances réelles lors de nos challenges et hackathons.</p>
+                <ul class="b2b-features">
+                    <li><i class="fa-solid fa-check-circle"></i> Talents formés aux stacks modernes</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Portfolio de projets réels vérifiés</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Soft-skills validés par le travail d'équipe</li>
+                    <li><i class="fa-solid fa-check-circle"></i> Possibilité de sponsoriser une Build Week</li>
+                </ul>
+                <a href="#" class="btn btn-primary" style="background: var(--accent); color: var(--dark-bg) !important;">Devenir partenaire</a>
+            </div>
+            <div style="text-align: center;">
+                <img src="https://placehold.co/500x500/12386E/FFFFFF?text=Dashboard+Entreprise" alt="Espace recruteur" style="max-width: 100%; border-radius: 24px; box-shadow: var(--shadow-lg); transform: rotate(2deg);">
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <div class="container">
+        <div class="cta-box">
+            <h2>Prêt pour le challenge ?</h2>
+            <p style="margin-bottom: 40px; opacity: 0.9; font-size: 1.2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Inscrivez-vous gratuitement, rejoignez une guilde et commencez à construire l'Afrique de demain dès aujourd'hui.
+            </p>
+            <a href="#" class="btn btn-white" style="padding: 18px 40px; font-size: 1.1rem; border-radius: 16px;">Créer mon compte gratuit</a>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            
+            <!-- Marque & Réseaux -->
+            <div class="footer-brand">
+                <a href="#" class="footer-logo">
+                    <i class="fa-solid fa-graduation-cap"></i> CSC Labs
+                </a>
+                <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem; max-width: 250px;">
+                    L'écosystème numérique qui transforme la jeunesse africaine en force technologique.
+                </p>
+                
+                <div style="margin-top: 10px;">
+                    <div style="font-size: 0.9rem; margin-bottom: 8px; font-weight: 700;">Réseaux sociaux</div>
+                    <div class="footer-social">
+                        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="#"><i class="fa-brands fa-github"></i></a>
+                        <a href="#"><i class="fa-brands fa-discord"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Liens -->
+            <div class="footer-col">
+                <h4>Plateforme</h4>
+                <ul>
+                    <li><a href="#concept">Comment ça marche</a></li>
+                    <li><a href="#guildes">Les Guildes</a></li>
+                    <li><a href="#projets">Projets réalisés</a></li>
+                    <li><a href="#">Talent Hub (Login)</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Ressources</h4>
+                <ul>
+                    <li><a href="#">Calendrier (Events)</a></li>
+                    <li><a href="#">Blog & Actus</a></li>
+                    <li><a href="#">Wiki / Cours</a></li>
+                    <li><a href="#">Mentors</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Entreprises</h4>
+                <ul>
+                    <li><a href="#">Proposer une mission</a></li>
+                    <li><a href="#">Recruter un talent</a></li>
+                    <li><a href="#">Devenir sponsor</a></li>
+                    <li><a href="#">Espace B2B</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h4>Légal & Contact</h4>
+                <ul>
+                    <li><a href="#">Nous contacter</a></li>
+                    <li><a href="#">Conditions générales</a></li>
+                    <li><a href="#">Confidentialité</a></li>
+                    <li><a href="#">Règlement des Guildes</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="discord-huge-text-container">
+            <div class="footer-bottom-bar">
+                <span>© 2026 Campus Skill Challenge. Tous droits réservés.</span>
+                <span>Développé avec passion pour l'Afrique.</span>
+            </div>
+            <!-- L'élément typographique massif style Discord -->
+            <h1 class="discord-huge-text">CSC LABS</h1>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // 1. Navbar Glassmorphism on Scroll
+    const header = document.getElementById('mainHeader');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+
+    // 2. Hero Image Carousel Logic
+    const slides = document.querySelectorAll('.slide');
+    let currentSlide = 0;
+    
+    function nextSlide() {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+    }
+    
+    // Change d'image toutes les 6 secondes
+    setInterval(nextSlide, 6000);
+
+    // 3. Animation fluide des compteurs (Intersection Observer)
+    function animateCounter(id, target, duration, suffix = '') {
+        let obj = document.getElementById(id);
+        if (!obj) return;
+        
+        let start = 0;
+        let range = target - start;
+        let startTime = null;
+
+        function step(timestamp) {
+            if (!startTime) startTime = timestamp;
+            let progress = Math.min((timestamp - startTime) / duration, 1);
+            let easeProgress = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+            
+            obj.innerHTML = Math.floor(easeProgress * range + start) + suffix;
+            
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        }
+        window.requestAnimationFrame(step);
+    }
+
+    // Lancer l'animation uniquement quand la section stats est visible
+    const statsSection = document.querySelector('.stats-section');
+    let animated = false;
+
+    const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && !animated) {
+            animateCounter('statStudents', 1500, 2500, '+');
+            animateCounter('statGuildes', 12, 1500, '');
+            animateCounter('statProjets', 120, 2000, '+');
+            animateCounter('statEmploy', 85, 2500, '%');
+            animated = true;
+        }
+    }, { threshold: 0.5 });
+
+    if(statsSection) {
+        observer.observe(statsSection);
+    }
+</script>
+
+</body>
+</html>

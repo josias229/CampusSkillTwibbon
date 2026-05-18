@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>CSC Labs | Le Concept - Version Améliorée</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        montserrat: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#006ef2',
+                        'primary-light': '#4c70b6',
+                        'primary-dark': '#0150d9',
+                        accent: '#006ef2',
+                        'dark-bg': '#080b1a',
+                        surface: '#FFFFFF',
+                        'surface-alt': '#f2f4f5',
+                        'bg-body': '#f2f4f5',
+                        text: {
+                            main: '#011031',
+                            muted: '#4c4f5f'
+                        }
+                    },
+                    boxShadow: {
+                        'card': '0 10px 30px -5px rgba(15, 23, 42, 0.05)',
+                        'card-hover': '0 20px 40px -5px rgba(15, 23, 42, 0.1)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: theme('colors.bg-body'); color: theme('colors.text.main'); overflow-x: hidden; }
+        header { position: fixed; top: 0; width: 100%; z-index: 1000; background: transparent; border-bottom: 1px solid transparent; padding: 24px 0; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        header.scrolled { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(28, 82, 155, 0.08); padding: 16px 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .navbar { display: flex; justify-content: space-between; align-items: center; max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: #FFFFFF; text-decoration: none; display: flex; align-items: center; gap: 12px; }
+        header.scrolled .logo { color: #011031; }
+        .logo .logo-scrolled { display: none; }
+        .logo .logo-default { display: block; }
+        header.scrolled .logo .logo-scrolled { display: block; }
+        header.scrolled .logo .logo-default { display: none; }
+        .nav-links { display: flex; align-items: center; gap: 36px; list-style: none; }
+        .nav-links a { text-decoration: none; color: rgba(255, 255, 255, 0.95); font-weight: 600; font-size: 0.95rem; transition: 0.3s; }
+        header.scrolled .nav-links a { color: #4c4f5f; }
+        .nav-links a:hover, .nav-links .active { color: #006ef2; }
+        .btn-ghost { background: rgba(255, 255, 255, 0.15); color: #FFFFFF !important; backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; font-weight: 700; padding: 10px 24px; transition: all 0.3s; }
+        header.scrolled .btn-ghost { background: rgba(0, 110, 242, 0.08); color: #006ef2 !important; border-color: transparent; }
+        @media (max-width: 768px) { .nav-links { display: none; } }
+        
+        /* === AMÉLIORATIONS SECTION PROCESSUS === */
+        .sticky-container {
+            position: sticky;
+            top: 120px;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.1);
+        }
+        
+        .step-image {
+            position: absolute;
+            inset: 0;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(1.05) translateY(20px);
+            transition: opacity 0.7s cubic-bezier(0.23, 1, 0.32, 1), transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+            will-change: opacity, transform;
+            pointer-events: none;
+        }
+        
+        .step-image.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            z-index: 2;
+        }
+        
+        /* Légère parallaxe au scroll */
+        .step-image.active .parallax-img {
+            transition: transform 0.1s linear;
+        }
+        
+        .step-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .image-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(12px);
+            padding: 1.25rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            transform: translateY(100%);
+            transition: transform 0.4s ease 0.2s;
+        }
+        
+        .step-image.active .image-caption {
+            transform: translateY(0);
+        }
+        
+        /* Animation texte améliorée */
+        .step-text {
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            opacity: 0.3;
+            transform: translateX(-10px);
+        }
+        
+        .step-text.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .step-text .step-number {
+            transition: all 0.3s ease;
+        }
+        
+        .step-text.active .step-number {
+            animation: pulse 0.5s ease-out;
+            box-shadow: 0 0 0 4px rgba(0,110,242,0.3);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,110,242,0.5); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(0,110,242,0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(0,110,242,0); }
+        }
+        
+        .step-text li {
+            transition: transform 0.2s ease, color 0.2s;
+        }
+        
+        .step-text li:hover {
+            transform: translateX(6px);
+            color: #006ef2;
+        }
+        
+        .step-text li:hover i {
+            transform: scale(1.1);
+        }
+        
+        /* Indicateur de progression */
+        .progress-indicator {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            padding: 8px 16px;
+            border-radius: 40px;
+            z-index: 20;
+        }
+        
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .progress-dot.active {
+            background: #006ef2;
+            width: 24px;
+            border-radius: 12px;
+        }
+        
+        /* Responsive : sur mobile, carrousel horizontal */
+        @media (max-width: 1024px) {
+            .sticky-container {
+                display: none;
+            }
+            
+            .steps-mobile-carousel {
+                display: flex;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                gap: 1.5rem;
+                padding-bottom: 2rem;
+                scrollbar-width: thin;
+            }
+            
+            .step-card {
+                flex: 0 0 85%;
+                scroll-snap-align: start;
+                background: white;
+                border-radius: 1.5rem;
+                overflow: hidden;
+                box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            }
+            
+            .step-card img {
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
+            }
+            
+            .step-card .content {
+                padding: 1.5rem;
+            }
+            
+            .mobile-only {
+                display: block;
+            }
+        }
+        
+        @media (min-width: 1025px) {
+            .mobile-only {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER (identique à l'original) -->
+    <header id="mainHeader">
+        <div class="container navbar">
+            <a href="index.html" class="logo">
+                <img src="logoCSCLabsWhite.png" alt="CSC Labs" class="h-10 logo-default">
+                <img src="logoCSCLabs.png" alt="CSC Labs" class="h-10 logo-scrolled">
+            </a>
+            <ul class="nav-links">
+                <li><a href="concept.html" class="active">Le Concept</a></li>
+                <li><a href="guildes.html">Guildes</a></li>
+                <li><a href="projets.html">Projets</a></li>
+                <li><a href="evenements.html">Événements</a></li>
+                <li><a href="entreprises.html">Entreprises</a></li>
+                <li><a href="login.html" class="btn btn-ghost">Connexion</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <!-- HERO (garde identique) -->
+        <section class="bg-dark-bg text-white pt-40 pb-24 md:pt-48 md:pb-32 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-2/3 md:w-3/4 h-full bg-[url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1000&q=80')] bg-cover bg-center opacity-40 mask-image-to-l pointer-events-none" style="mask-image: linear-gradient(to left, black, transparent);"></div>
+            <div class="container mx-auto px-6 max-w-7xl relative z-10">
+                <div class="max-w-2xl">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-black mb-6">De la théorie à la pratique <br><span class="text-accent">intensive.</span></h1>
+                    <p class="text-lg md:text-xl text-gray-300 mb-10">Le système éducatif classique forme de bons théoriciens. CSC Labs prend le relais pour en faire d'excellents praticiens.</p>
+                    <a href="#processus" class="bg-primary hover:bg-primary-light text-white font-bold px-8 py-4 rounded-xl inline-flex items-center gap-2">Découvrir le processus <i class="fa-solid fa-arrow-down"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION PROCESSUS AMÉLIORÉE -->
+        <section id="processus" class="bg-surface py-24 relative">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-primary font-bold text-sm uppercase tracking-widest mb-4 block">Processus d'Immersion</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-text-main mb-4">Comment ça fonctionne ?</h2>
+                    <p class="text-text-muted text-lg">Une pédagogie chirurgicale conçue pour simuler les contraintes de production en entreprise.</p>
+                </div>
+
+                <!-- Version Desktop (sticky + crossfade) -->
+                <div class="hidden lg:grid lg:grid-cols-2 gap-16 relative">
+                    <!-- Colonne gauche sticky avec images -->
+                    <div class="relative h-[500px] sticky-container" id="stickyImagesContainer">
+                        <!-- Images 1 à 4 avec légende animée -->
+                        <div class="step-image active" data-step="1">
+                            <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=800&q=80" alt="Rejoindre Guilde" class="parallax-img">
+                            <div class="image-caption">
+                                <h3 class="font-bold text-text-main">L'Intégration</h3>
+                                <p class="text-sm text-text-muted">Rejoignez votre guilde</p>
+                            </div>
+                        </div>
+                        <div class="step-image" data-step="2">
+                            <img src="https://images.unsplash.com/photo-1531498860502-2c67f99cb5ce?auto=format&fit=crop&w=800&q=80" alt="Build Weeks" class="parallax-img">
+                            <div class="image-caption">
+                                <h3 class="font-bold text-text-main">Le Feu de l'Action</h3>
+                                <p class="text-sm text-text-muted">Build Weeks intensives</p>
+                            </div>
+                        </div>
+                        <div class="step-image" data-step="3">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="Portfolio" class="parallax-img">
+                            <div class="image-caption">
+                                <h3 class="font-bold text-text-main">La Preuve par le Produit</h3>
+                                <p class="text-sm text-text-muted">Portfolio vérifié</p>
+                            </div>
+                        </div>
+                        <div class="step-image" data-step="4">
+                            <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80" alt="Placement" class="parallax-img">
+                            <div class="image-caption">
+                                <h3 class="font-bold text-text-main">L'Envol</h3>
+                                <p class="text-sm text-text-muted">Placement B2B</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Indicateur de progression (points) -->
+                        <div class="progress-indicator">
+                            <div class="progress-dot active" data-dot="1"></div>
+                            <div class="progress-dot" data-dot="2"></div>
+                            <div class="progress-dot" data-dot="3"></div>
+                            <div class="progress-dot" data-dot="4"></div>
+                        </div>
+                    </div>
+
+                    <!-- Colonne droite : textes défilants -->
+                    <div class="space-y-[30vh] pb-[20vh] relative z-10" id="steps-container">
+                        <div class="step-text active" data-step="1">
+                            <div class="step-number w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-xl mb-4">1</div>
+                            <h3 class="text-2xl font-bold mb-4 text-text-main">Rejoindre une Guilde</h3>
+                            <p class="text-text-muted leading-relaxed mb-4">Intégrez immédiatement votre pôle de spécialisation : Ingénierie Logicielle, Design UI/UX ou Data & IA. Vous êtes entouré de pairs et encadré par des mentors.</p>
+                            <ul class="space-y-3 text-sm font-semibold text-text-main">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-accent"></i> Évaluation initiale de niveau</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-accent"></i> Attribution d'une stack technique</li>
+                            </ul>
+                        </div>
+                        <div class="step-text" data-step="2">
+                            <div class="step-number w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-xl mb-4">2</div>
+                            <h3 class="text-2xl font-bold mb-4 text-text-main">Les Build Weeks</h3>
+                            <p class="text-text-muted leading-relaxed mb-4">Des sessions intensives où vous affrontez des briefs fournis par de vraies entreprises. Livrez un prototype fonctionnel en équipe pluridisciplinaire.</p>
+                            <ul class="space-y-3 text-sm font-semibold text-text-main">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-accent"></i> Méthodologie Scrum / Agile</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-accent"></i> Pression des livrables réels</li>
+                            </ul>
+                        </div>
+                        <div class="step-text" data-step="3">
+                            <div class="step-number w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-xl mb-4">3</div>
+                            <h3 class="text-2xl font-bold mb-4 text-text-main">Validation du Portfolio</h3>
+                            <p class="text-text-muted leading-relaxed mb-4">Chaque ligne de code poussée sur GitHub, chaque maquette validée alimente votre portfolio public sur la plateforme. C'est votre nouveau CV.</p>
+                        </div>
+                        <div class="step-text" data-step="4">
+                            <div class="step-number w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-xl mb-4">4</div>
+                            <h3 class="text-2xl font-bold mb-4 text-text-main">Placement B2B</h3>
+                            <p class="text-text-muted leading-relaxed mb-4">Les entreprises partenaires ont accès au vivier. Elles vous recrutent directement sur la base de vos réalisations vérifiables.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Version Mobile : Carrousel horizontal -->
+                <div class="lg:hidden mobile-only">
+                    <div class="steps-mobile-carousel">
+                        <div class="step-card">
+                            <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=800&q=80" alt="Étape 1">
+                            <div class="content">
+                                <div class="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-xl mb-4">1</div>
+                                <h3 class="text-xl font-bold mb-2">Rejoindre une Guilde</h3>
+                                <p class="text-text-muted text-sm">Intégrez votre pôle de spécialisation.</p>
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <img src="https://images.unsplash.com/photo-1531498860502-2c67f99cb5ce?auto=format&fit=crop&w=800&q=80" alt="Étape 2">
+                            <div class="content">
+                                <div class="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-xl mb-4">2</div>
+                                <h3 class="text-xl font-bold mb-2">Build Weeks</h3>
+                                <p class="text-text-muted text-sm">Sessions intensives avec briefs réels.</p>
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="Étape 3">
+                            <div class="content">
+                                <div class="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-xl mb-4">3</div>
+                                <h3 class="text-xl font-bold mb-2">Portfolio</h3>
+                                <p class="text-text-muted text-sm">Validez vos compétences par des projets.</p>
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80" alt="Étape 4">
+                            <div class="content">
+                                <div class="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-xl mb-4">4</div>
+                                <h3 class="text-xl font-bold mb-2">Placement</h3>
+                                <p class="text-text-muted text-sm">Les entreprises recrutent directement.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA FINAL (inchangé) -->
+        <section class="container mx-auto px-6 max-w-7xl py-20">
+            <div class="bg-gradient-to-br from-primary to-primary-dark rounded-[2rem] p-12 md:p-20 text-center shadow-2xl text-white">
+                <h2 class="text-3xl md:text-5xl font-black mb-6">Prêt à coder la différence ?</h2>
+                <p class="text-white/90 text-lg mb-10">Passez de l'étudiant théorique au "Builder" professionnel.</p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="login.html" class="bg-white hover:bg-gray-100 text-primary-dark font-bold text-lg px-8 py-4 rounded-2xl transition-all">Je crée mon profil</a>
+                    <a href="guildes.html" class="bg-white/10 hover:bg-white/20 text-white font-bold text-lg px-8 py-4 rounded-2xl border border-white/20">Voir les spécialisations</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER (simplifié mais fonctionnel) -->
+    <footer class="bg-dark-bg pt-20 border-t border-white/10">
+        <div class="container mx-auto px-6 max-w-7xl">
+            <div class="text-center text-white/40 text-sm pb-12">© 2026 Campus Skill Challenge. Tous droits réservés.</div>
+        </div>
+    </footer>
+
+    <!-- Scripts GSAP + ScrollTrigger + améliorations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- AMÉLIORATION : déclenchement plus réactif, crossfade, indicateur ---
+        if (window.innerWidth >= 1024) {
+            const stepTexts = gsap.utils.toArray('.step-text');
+            const stepImages = gsap.utils.toArray('.step-image');
+            const progressDots = gsap.utils.toArray('.progress-dot');
+            
+            // Fonction pour activer une étape avec crossfade amélioré
+            function activateStep(index) {
+                // Désactiver tous les textes et images
+                stepTexts.forEach(t => t.classList.remove('active'));
+                stepImages.forEach(img => img.classList.remove('active'));
+                progressDots.forEach(dot => dot.classList.remove('active'));
+                
+                // Activer l'étape courante
+                stepTexts[index].classList.add('active');
+                stepImages[index].classList.add('active');
+                progressDots[index].classList.add('active');
+                
+                // Animation supplémentaire : micro shake sur le numéro
+                const stepNumber = stepTexts[index].querySelector('.step-number');
+                if (stepNumber) {
+                    gsap.fromTo(stepNumber, 
+                        { scale: 0.9, backgroundColor: '#006ef2' },
+                        { scale: 1, duration: 0.3, ease: "back.out(1.2)", backgroundColor: '#006ef2' }
+                    );
+                }
+                
+                // Animation d'entrée des listes (stagger)
+                const listItems = stepTexts[index].querySelectorAll('li');
+                if (listItems.length) {
+                    gsap.fromTo(listItems, 
+                        { opacity: 0, x: -15 },
+                        { opacity: 1, x: 0, stagger: 0.08, duration: 0.4, ease: "power2.out" }
+                    );
+                }
+            }
+            
+            // Déclenchement plus réactif : quand le haut de l'élément atteint 70% de la hauteur de l'écran
+            stepTexts.forEach((text, i) => {
+                ScrollTrigger.create({
+                    trigger: text,
+                    start: "top 70%",    // plus tôt qu'avant (top center)
+                    end: "bottom 30%",
+                    onEnter: () => activateStep(i),
+                    onEnterBack: () => activateStep(i),
+                    // Pour éviter des changements brusques lors du scroll inverse rapide
+                    toggleActions: "play none none reverse"
+                });
+            });
+            
+            // Effet de parallaxe sur l'image active (légère translation selon le scroll)
+            stepImages.forEach(img => {
+                ScrollTrigger.create({
+                    trigger: img.parentElement, // le conteneur sticky
+                    start: "top bottom",
+                    end: "bottom top",
+                    onUpdate: (self) => {
+                        if (img.classList.contains('active')) {
+                            const yOffset = self.progress * 30 - 15; // entre -15 et +15px
+                            gsap.set(img.querySelector('.parallax-img'), { y: yOffset });
+                        }
+                    }
+                });
+            });
+            
+            // Optionnel : animation d'entrée des textes au scroll initial
+            gsap.from('.step-text', {
+                opacity: 0,
+                x: 30,
+                stagger: 0.2,
+                duration: 0.8,
+                scrollTrigger: {
+                    trigger: '#processus',
+                    start: 'top 80%',
+                    toggleActions: 'play none none reset'
+                }
+            });
+        }
+        
+        // Effet de survol sur les points de progression (clic optionnel)
+        const dots = document.querySelectorAll('.progress-dot');
+        dots.forEach((dot, idx) => {
+            dot.addEventListener('click', () => {
+                const stepElements = document.querySelectorAll('.step-text');
+                if (stepElements[idx]) {
+                    stepElements[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+        });
+        
+        // Header scroll effect
+        const header = document.getElementById('mainHeader');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        });
+        
+        // Pour mobile, on ajoute un scroll snap smooth
+        if (window.innerWidth < 1024) {
+            const carousel = document.querySelector('.steps-mobile-carousel');
+            if (carousel) {
+                carousel.style.scrollBehavior = 'smooth';
+            }
+        }
+    </script>
+</body>
+</html>

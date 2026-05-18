@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AlertBénin - Signalement Citoyen</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins', sans-serif;
+    }
+
+    body{
+      background:#f5f7fb;
+      color:#1d1d1d;
+    }
+
+    /* HEADER */
+
+    header{
+      background:linear-gradient(135deg,#0b1f3a,#163e73);
+      color:white;
+      padding:20px 8%;
+    }
+
+    nav{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .logo{
+      font-size:28px;
+      font-weight:700;
+    }
+
+    .logo span{
+      color:#3ddc97;
+    }
+
+    nav ul{
+      display:flex;
+      list-style:none;
+      gap:30px;
+    }
+
+    nav ul li a{
+      color:white;
+      text-decoration:none;
+      font-weight:500;
+      transition:0.3s;
+    }
+
+    nav ul li a:hover{
+      color:#3ddc97;
+    }
+
+    /* HERO */
+
+    .hero{
+      min-height:90vh;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:40px;
+      padding:60px 8%;
+      background:linear-gradient(135deg,#0b1f3a,#163e73);
+      color:white;
+      flex-wrap:wrap;
+    }
+
+    .hero-text{
+      flex:1;
+      min-width:300px;
+    }
+
+    .hero-text h1{
+      font-size:55px;
+      line-height:1.2;
+      margin-bottom:20px;
+    }
+
+    .hero-text h1 span{
+      color:#3ddc97;
+    }
+
+    .hero-text p{
+      font-size:18px;
+      line-height:1.8;
+      margin-bottom:30px;
+      color:#d8d8d8;
+    }
+
+    .hero-buttons{
+      display:flex;
+      gap:15px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      padding:14px 28px;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:16px;
+      font-weight:600;
+      transition:0.3s;
+      text-decoration:none;
+      display:inline-block;
+    }
+
+    .btn-primary{
+      background:#3ddc97;
+      color:#0b1f3a;
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-3px);
+    }
+
+    .btn-outline{
+      border:2px solid white;
+      color:white;
+      background:transparent;
+    }
+
+    .btn-outline:hover{
+      background:white;
+      color:#0b1f3a;
+    }
+
+    .hero-card{
+      flex:1;
+      min-width:320px;
+      background:white;
+      border-radius:20px;
+      padding:30px;
+      color:#111;
+      box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .hero-card h3{
+      margin-bottom:20px;
+      color:#163e73;
+    }
+
+    .hero-card input,
+    .hero-card textarea,
+    .hero-card select{
+      width:100%;
+      padding:14px;
+      margin-bottom:15px;
+      border-radius:10px;
+      border:1px solid #ddd;
+      outline:none;
+    }
+
+    .hero-card button{
+      width:100%;
+      background:#163e73;
+      color:white;
+      padding:14px;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:16px;
+      font-weight:600;
+    }
+
+    /* FEATURES */
+
+    .section{
+      padding:80px 8%;
+    }
+
+    .section-title{
+      text-align:center;
+      margin-bottom:60px;
+    }
+
+    .section-title h2{
+      font-size:40px;
+      color:#163e73;
+      margin-bottom:10px;
+    }
+
+    .section-title p{
+      color:#666;
+    }
+
+    .features{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:25px;
+    }
+
+    .feature-card{
+      background:white;
+      padding:30px;
+      border-radius:18px;
+      box-shadow:0 8px 20px rgba(0,0,0,0.05);
+      transition:0.3s;
+    }
+
+    .feature-card:hover{
+      transform:translateY(-8px);
+    }
+
+    .feature-icon{
+      font-size:45px;
+      margin-bottom:15px;
+    }
+
+    .feature-card h3{
+      margin-bottom:10px;
+      color:#163e73;
+    }
+
+    .feature-card p{
+      color:#666;
+      line-height:1.7;
+    }
+
+    /* MAP */
+
+    .map-section{
+      background:#0b1f3a;
+      color:white;
+      border-radius:25px;
+      padding:50px;
+      text-align:center;
+    }
+
+    .map-box{
+      margin-top:30px;
+      background:white;
+      height:400px;
+      border-radius:20px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      color:#163e73;
+      font-size:24px;
+      font-weight:600;
+    }
+
+    /* STATS */
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+      gap:25px;
+      margin-top:40px;
+    }
+
+    .stat-card{
+      background:white;
+      padding:30px;
+      text-align:center;
+      border-radius:20px;
+      box-shadow:0 8px 20px rgba(0,0,0,0.05);
+    }
+
+    .stat-card h3{
+      font-size:45px;
+      color:#163e73;
+    }
+
+    .stat-card p{
+      color:#666;
+      margin-top:10px;
+    }
+
+    /* FOOTER */
+
+    footer{
+      background:#081528;
+      color:white;
+      padding:50px 8%;
+      margin-top:80px;
+    }
+
+    .footer-content{
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:30px;
+    }
+
+    .footer-box{
+      flex:1;
+      min-width:250px;
+    }
+
+    .footer-box h3{
+      margin-bottom:20px;
+      color:#3ddc97;
+    }
+
+    .footer-box p{
+      color:#d1d1d1;
+      line-height:1.8;
+    }
+
+    .copyright{
+      text-align:center;
+      margin-top:40px;
+      color:#aaa;
+    }
+
+    /* RESPONSIVE */
+
+    @media(max-width:768px){
+
+      .hero-text h1{
+        font-size:40px;
+      }
+
+      nav ul{
+        display:none;
+      }
+
+      .hero{
+        padding-top:30px;
+      }
+
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+
+  <header>
+
+    <nav>
+
+      <div class="logo">
+        Alert<span>Bénin</span>
+      </div>
+
+      <ul>
+        <li><a href="#">Accueil</a></li>
+        <li><a href="#">Signaler</a></li>
+        <li><a href="#">Carte</a></li>
+        <li><a href="#">Statistiques</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+
+    </nav>
+
+  </header>
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="hero-text">
+
+      <h1>
+        Signalez les incidents publics au <span>Bénin</span>
+      </h1>
+
+      <p>
+        Une plateforme citoyenne intelligente permettant de signaler rapidement
+        les pannes d’électricité, fuites d’eau, poteaux dangereux,
+        routes dégradées et autres incidents urbains.
+      </p>
+
+      <div class="hero-buttons">
+
+        <a href="#" class="btn btn-primary">
+          Commencer
+        </a>
+
+        <a href="#" class="btn btn-outline">
+          Voir la carte
+        </a>
+
+      </div>
+
+    </div>
+
+    <!-- FORMULAIRE -->
+
+    <div class="hero-card">
+
+      <h3>Faire un signalement</h3>
+
+      <form id="reportForm">
+
+        <select required>
+          <option value="">Choisir un incident</option>
+          <option>Panne d'électricité</option>
+          <option>Fuite d'eau</option>
+          <option>Poteau dangereux</option>
+          <option>Route dégradée</option>
+          <option>Lampadaire cassé</option>
+        </select>
+
+        <input type="text" placeholder="Votre quartier" required>
+
+        <textarea rows="5" placeholder="Décrivez le problème..." required></textarea>
+
+        <input type="file">
+
+        <button type="submit">
+          Envoyer le signalement
+        </button>
+
+      </form>
+
+    </div>
+
+  </section>
+
+  <!-- FEATURES -->
+
+  <section class="section">
+
+    <div class="section-title">
+
+      <h2>Fonctionnalités intelligentes</h2>
+
+      <p>
+        Une plateforme moderne pensée pour les citoyens et les collectivités.
+      </p>
+
+    </div>
+
+    <div class="features">
+
+      <div class="feature-card">
+
+        <div class="feature-icon">⚡</div>
+
+        <h3>Pannes Électricité</h3>
+
+        <p>
+          Signalez rapidement les coupures, transformateurs défectueux et poteaux dangereux.
+        </p>
+
+      </div>
+
+      <div class="feature-card">
+
+        <div class="feature-icon">💧</div>
+
+        <h3>Fuites d’Eau</h3>
+
+        <p>
+          Aidez à détecter et localiser les problèmes liés à l’eau dans votre quartier.
+        </p>
+
+      </div>
+
+      <div class="feature-card">
+
+        <div class="feature-icon">📍</div>
+
+        <h3>Géolocalisation</h3>
+
+        <p>
+          Les incidents sont automatiquement positionnés sur la carte en temps réel.
+        </p>
+
+      </div>
+
+      <div class="feature-card">
+
+        <div class="feature-icon">🤖</div>
+
+        <h3>IA & Analyse</h3>
+
+        <p>
+          Le système détecte automatiquement les zones critiques et priorités.
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- MAP -->
+
+  <section class="section">
+
+    <div class="map-section">
+
+      <h2>Carte des incidents en temps réel</h2>
+
+      <p>
+        Visualisez les pannes et incidents signalés partout au Bénin.
+      </p>
+
+      <div class="map-box">
+        🗺️ Carte Interactive du Bénin
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- STATS -->
+
+  <section class="section">
+
+    <div class="section-title">
+
+      <h2>Impact citoyen</h2>
+
+      <p>
+        Des données en temps réel pour améliorer les services publics.
+      </p>
+
+    </div>
+
+    <div class="stats">
+
+      <div class="stat-card">
+        <h3>2K+</h3>
+        <p>Incidents signalés</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>85%</h3>
+        <p>Résolution rapide</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>77</h3>
+        <p>Quartiers couverts</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>24/7</h3>
+        <p>Surveillance citoyenne</p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+
+  <footer>
+
+    <div class="footer-content">
+
+      <div class="footer-box">
+
+        <h3>AlertBénin</h3>
+
+        <p>
+          Une plateforme numérique citoyenne pour moderniser
+          la gestion des incidents publics au Bénin.
+        </p>
+
+      </div>
+
+      <div class="footer-box">
+
+        <h3>Services</h3>
+
+        <p>
+          - Signalement<br>
+          - Cartographie<br>
+          - Analyse IA<br>
+          - Alertes SMS<br>
+          - Tableau de bord
+        </p>
+
+      </div>
+
+      <div class="footer-box">
+
+        <h3>Contact</h3>
+
+        <p>
+          contact@alertbenin.bj<br>
+          +229 XX XX XX XX<br>
+          Cotonou - Bénin
+        </p>
+
+      </div>
+
+    </div>
+
+    <div class="copyright">
+      © 2026 AlertBénin - Tous droits réservés.
+    </div>
+
+  </footer>
+
+  <script>
+
+    const form = document.getElementById('reportForm');
+
+    form.addEventListener('submit', function(e){
+
+      e.preventDefault();
+
+      alert("✅ Votre signalement a été envoyé avec succès !");
+
+      form.reset();
+
+    });
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twibbon Campus Skill Challenge - Responsive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        :root {
+            --primary: #1e40af;
+            --secondary: #fbbf24;
+            --dark-bg: #0b2853;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0f172a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+        }
+
+        /* Container 4:5 Ratio */
+        .twibbon-card {
+            width: 100%;
+            max-width: 550px;
+            aspect-ratio: 4 / 5;
+            position: relative;
+            background: linear-gradient(135deg, #0b2853 0%, #13448a 100%);
+            overflow: hidden;
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .grid-overlay {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+        }
+
+        .outline-text {
+            color: transparent;
+            -webkit-text-stroke: 1.5px white;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .photo-placeholder {
+            transition: all 0.4s ease;
+            background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Animation for the floating elements */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+
+    <div class="twibbon-card flex flex-col items-center justify-between p-4 sm:p-8">
+        <div class="grid-overlay"></div>
+
+        <!-- Header: Contacts & Logo -->
+        <div class="w-full flex justify-between items-start z-10">
+            <div class="flex flex-col gap-2">
+                <div class="bg-white px-3 py-1 rounded-full flex items-center gap-2 shadow-lg">
+                    <i class="fab fa-linkedin text-blue-800"></i>
+                    <i class="fab fa-facebook text-blue-600"></i>
+                    <span class="text-[10px] sm:text-xs font-bold text-blue-900">@campus_skill_challenge</span>
+                </div>
+                <div class="text-white text-[10px] sm:text-xs flex items-center gap-2 opacity-90 pl-2">
+                    <i class="fab fa-whatsapp text-green-400"></i>
+                    <span>+229 01 90 53 08 22</span>
+                </div>
+            </div>
+
+            <div class="bg-white p-3 rounded-b-2xl -mt-4 sm:-mt-8 text-center shadow-xl w-24 sm:w-32">
+                <i class="fas fa-graduation-cap text-2xl sm:text-3xl text-blue-800 mb-1"></i>
+                <h2 class="text-[10px] sm:text-xs font-black text-blue-900 leading-tight">CAMPUS<br>SKILL</h2>
+                <div class="h-1 w-6 bg-amber-400 mx-auto my-1 rounded-full"></div>
+            </div>
+        </div>
+
+        <!-- Center: Photo Frame -->
+        <div class="relative z-10 w-48 h-48 sm:w-64 sm:h-64 mt-2">
+            <div class="photo-placeholder w-full h-full rounded-[2rem] border-4 border-white/20 shadow-2xl relative overflow-hidden">
+                <!-- Overlay shadow for the photo -->
+                <div class="absolute inset-0 bg-gradient-to-t from-blue-900/40 to-transparent"></div>
+            </div>
+            <!-- Decorative Corners -->
+            <div class="absolute -top-3 -left-3 w-8 h-8 border-t-4 border-l-4 border-amber-400 rounded-tl-xl"></div>
+            <div class="absolute -bottom-3 -right-3 w-8 h-8 border-b-4 border-r-4 border-amber-400 rounded-br-xl"></div>
+        </div>
+
+        <!-- Title & Slogan -->
+        <div class="text-center z-10 mt-2">
+            <div class="flex flex-col items-center">
+                <span class="outline-text text-5xl sm:text-7xl font-black uppercase tracking-tighter leading-none">Je</span>
+                <span class="text-white text-5xl sm:text-7xl font-black uppercase tracking-tighter leading-none -mt-2">Participe</span>
+            </div>
+            <p class="text-white/90 text-[11px] sm:text-sm font-medium mt-3 px-4 leading-snug">
+                Objectif : <span class="text-amber-400 font-bold">2 à 3 Certifications Internationales</span> gratuites en 30 jours
+            </p>
+        </div>
+
+        <!-- Footer: Certifications & Partners -->
+        <div class="w-full z-10">
+            <div class="glass-effect rounded-2xl p-3 sm:p-4 mb-2">
+                <p class="text-[9px] text-amber-400 font-bold uppercase tracking-[0.2em] text-center mb-3">Parcours Certifiants</p>
+                <div class="flex justify-center items-center flex-wrap gap-3 sm:gap-5 opacity-80">
+                    <div class="flex items-center gap-1.5 text-white text-[10px] font-semibold">
+                        <i class="fab fa-google"></i> Google
+                    </div>
+                    <div class="flex items-center gap-1.5 text-white text-[10px] font-semibold">
+                        <i class="fas fa-microchip"></i> IBM
+                    </div>
+                    <div class="flex items-center gap-1.5 text-white text-[10px] font-semibold">
+                        <i class="fas fa-network-wired"></i> Cisco
+                    </div>
+                    <div class="flex items-center gap-1.5 text-white text-[10px] font-semibold">
+                        <i class="fab fa-aws"></i> AWS
+                    </div>
+                    <div class="text-white text-[10px] font-semibold">Microsoft</div>
+                </div>
+            </div>
+
+            <div class="flex justify-center gap-4 text-[9px] text-white/50 font-medium">
+                <span>USD's</span>
+                <span>•</span>
+                <span>SIKA COMPANY SARL</span>
+                <span>•</span>
+                <span>JK-Nexa</span>
+            </div>
+        </div>
+
+        <!-- Decorative elements -->
+        <i class="fas fa-lightbulb absolute -bottom-10 -right-10 text-[15rem] text-white opacity-5 rotate-12"></i>
+    </div>
+
+    <!-- UI Note for the user -->
+    <div class="fixed bottom-4 left-0 right-0 text-center text-white/40 text-[10px] uppercase tracking-widest px-4 pointer-events-none">
+        Design Optimisé pour Mobile & Desktop (4:5 Ratio)
+    </div>
+
+</body>
+</html>

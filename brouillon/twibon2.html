@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Skill Challenge - Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        /* */
+        :root {
+            --brand-blue: #0f172a;
+            --brand-accent: #38bdf8;
+            --brand-gold: #fbbf24;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #020617;
+            color: white;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .twibbon-preview {
+            width: 100%;
+            max-width: 480px;
+            aspect-ratio: 4 / 5;
+            position: relative;
+            overflow: hidden;
+            border-radius: 2rem;
+            background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
+        }
+
+        .photo-mask {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 75%;
+            height: 55%;
+            border-radius: 1.5rem;
+            background: #1e293b;
+            overflow: hidden;
+            z-index: 5;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .name-label {
+            background: var(--brand-gold);
+            color: #000;
+            padding: 4px 16px;
+            border-radius: 99px;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3);
+        }
+
+        .outline-title {
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.4);
+            line-height: 0.8;
+        }
+
+        /* Animation pour le scan */
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--brand-accent), transparent);
+            top: 0;
+            animation: scan 3s linear infinite;
+            z-index: 6;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        @media (max-width: 640px) {
+            .twibbon-preview {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- -->
+    <div class="max-w-6xl w-full grid lg:grid-cols-2 gap-12 items-center">
+        
+        <!-- Colonne Gauche: Contrôles -->
+        <div class="space-y-8 order-2 lg:order-1">
+            <div>
+                <h1 class="text-4xl font-extrabold mb-4 text-white">Personnalisez votre <span class="text-sky-400">Badge</span></h1>
+                <p class="text-slate-400">Rejoignez le Campus Skill Challenge. Complétez vos informations pour générer votre visuel officiel.</p>
+            </div>
+
+            <!-- -->
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-slate-300">Votre Nom Complet</label>
+                    <input type="text" id="nameInput" placeholder="Ex: Jean-Marc SIKA" 
+                           class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 focus:border-sky-500 outline-none transition-all">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-slate-300">Photo de Profil</label>
+                    <div class="flex items-center gap-4">
+                        <label class="flex-1 cursor-pointer bg-slate-800 hover:bg-slate-700 border-2 border-dashed border-slate-600 rounded-xl p-4 text-center transition-all">
+                            <span class="text-sm text-slate-400"><i class="fas fa-cloud-upload-alt mr-2"></i>Choisir une image</span>
+                            <input type="file" id="imageInput" class="hidden" accept="image/*">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-slate-800 flex flex-wrap gap-4">
+                <button onclick="window.print()" class="bg-white text-black px-6 py-3 rounded-xl font-bold hover:bg-sky-400 transition-colors flex items-center gap-2">
+                    <i class="fas fa-download"></i> Enregistrer l'image
+                </button>
+                <div class="flex -space-x-2">
+                    <div class="w-10 h-10 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center text-xs font-bold">+120</div>
+                    <p class="text-xs text-slate-500 self-center ml-4">Participants inscrits aujourd'hui</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne Droite: Le Twibbon Preview -->
+        <div class="flex justify-center order-1 lg:order-2">
+            <!-- -->
+            <div class="twibbon-preview" id="twibbon">
+                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-sky-900/20 via-transparent to-transparent"></div>
+                
+                <!-- Grille technique -->
+                <div class="absolute inset-0 opacity-[0.03] pointer-events-none" 
+                     style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                <!-- Header Badge -->
+                <div class="absolute top-6 left-6 right-6 flex justify-between items-start z-20">
+                    <div class="flex flex-col gap-1">
+                        <div class="bg-white/90 backdrop-blur text-[9px] font-black text-slate-900 px-3 py-1 rounded-full shadow-xl">
+                            OFFICIAL PARTICIPANT 2024
+                        </div>
+                        <div class="text-[10px] text-white/60 pl-1 mt-1">
+                            <i class="fab fa-whatsapp text-emerald-400 mr-1"></i> +229 01 90 53 08 22
+                        </div>
+                    </div>
+                    <div class="bg-white p-3 rounded-2xl shadow-2xl flex flex-col items-center w-24">
+                        <i class="fas fa-graduation-cap text-2xl text-slate-900 mb-1"></i>
+                        <span class="text-[8px] font-black text-slate-900 leading-tight text-center">CAMPUS<br>SKILL</span>
+                    </div>
+                </div>
+
+                <!-- Main Photo Frame -->
+                <div class="photo-mask">
+                    <div class="scan-line"></div>
+                    <img id="previewImg" src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=500&q=80" 
+                         class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60"></div>
+                </div>
+
+                <!-- Personalized Info -->
+                <div class="absolute bottom-[28%] left-0 right-0 text-center z-10">
+                    <div class="inline-block name-label mb-2" id="displayName">Votre Nom Ici</div>
+                    <div class="flex flex-col">
+                        <span class="outline-title text-5xl font-black uppercase italic">Je</span>
+                        <span class="text-white text-6xl font-black uppercase italic -mt-2 drop-shadow-2xl">Participe</span>
+                    </div>
+                </div>
+
+                <!-- Footer Certifications -->
+                <div class="absolute bottom-6 left-6 right-6 z-20 space-y-4">
+                    <!-- Glass Box for Certifs -->
+                    <div class="glass-panel p-4 rounded-2xl">
+                        <p class="text-[8px] text-sky-400 font-bold uppercase tracking-widest text-center mb-3">Parcours Certifiants International</p>
+                        <div class="flex justify-between items-center px-2 opacity-60">
+                            <i class="fab fa-google text-lg"></i>
+                            <i class="fab fa-aws text-lg"></i>
+                            <span class="text-[10px] font-bold">IBM</span>
+                            <i class="fas fa-network-wired text-lg"></i>
+                            <span class="text-[10px] font-bold">CISCO</span>
+                        </div>
+                    </div>
+
+                    <!-- Partner List -->
+                    <div class="flex justify-center gap-3 text-[7px] text-white/30 font-bold uppercase tracking-tighter">
+                        <span>USD's</span>
+                        <span>/</span>
+                        <span>SIKA COMPANY SARL</span>
+                        <span>/</span>
+                        <span>JK-Nexa</span>
+                    </div>
+                </div>
+
+                <!-- Decorative elements -->
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-sky-500/10 rounded-full blur-3xl"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- -->
+    <script>
+        // Mise à jour du nom
+        const nameInput = document.getElementById('nameInput');
+        const displayName = document.getElementById('displayName');
+
+        nameInput.addEventListener('input', (e) => {
+            displayName.innerText = e.target.value || "Votre Nom Ici";
+        });
+
+        // Mise à jour de l'image
+        const imageInput = document.getElementById('imageInput');
+        const previewImg = document.getElementById('previewImg');
+
+        imageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+
+</body>
+</html>

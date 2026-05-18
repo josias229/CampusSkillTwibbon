@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur Badge - Campus Skill Challenge</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Polices -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- html2canvas pour la génération de l'image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        :root {
+            --brand-blue: #0066FF;
+            --brand-orange: #FF6B00;
+            --bg-dark: #05070A;
+        }
+
+        body {
+            background-color: #0f172a;
+            font-family: 'Space Grotesk', sans-serif;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .font-syncopate { font-family: 'Syncopate', sans-serif; }
+
+        /* Conteneur principal du Twibbon (Format 4:5) */
+        #twibbon-card {
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 4 / 5;
+            position: relative;
+            background: var(--bg-dark);
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            /* Important pour html2canvas */
+            transform-origin: top center;
+        }
+
+        .tech-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(0, 102, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(255, 107, 0, 0.1) 0%, transparent 40%),
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+            z-index: 1;
+        }
+
+        .diagonal-stripes {
+            position: absolute;
+            top: 0; right: 0;
+            width: 300px; height: 300px;
+            background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.02) 10px, rgba(255,255,255,0.02) 20px);
+            z-index: 1;
+        }
+
+        /* Cadre Photo Central */
+        .profile-wrapper {
+            position: absolute;
+            top: 48%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            height: 55%;
+            z-index: 10;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.02);
+            padding: 12px;
+            clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);
+        }
+
+        #profile-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);
+            filter: contrast(1.1) brightness(1.1);
+            background-color: #1e293b;
+        }
+
+        .side-label {
+            position: absolute;
+            left: 5%;
+            top: 48%;
+            transform: translateY(-50%) rotate(-90deg);
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            color: var(--brand-blue);
+            font-weight: bold;
+            z-index: 15;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
+
+        .side-label::before, .side-label::after {
+            content: "";
+            width: 20px;
+            height: 1px;
+            background: var(--brand-blue);
+        }
+
+        .info-pill {
+            background: rgba(0, 102, 255, 0.1);
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .orange-pill {
+            background: rgba(255, 107, 0, 0.1);
+            border: 1px solid rgba(255, 107, 0, 0.3);
+        }
+
+        .logo-floating {
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+        }
+
+        .custom-file-upload {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .custom-file-upload:hover {
+            border-color: var(--brand-blue);
+            color: var(--brand-blue);
+        }
+
+        .toast-enter {
+            opacity: 1 !important;
+            transform: translate(-50%, 0) !important;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-10 flex flex-col items-center min-h-screen">
+
+    <!-- Toast de notification -->
+    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 -translate-y-8 opacity-0 bg-slate-800 text-white px-6 py-4 rounded-xl shadow-2xl border border-slate-700 z-50 transition-all duration-300 flex items-center gap-3 pointer-events-none">
+        <i id="toastIcon" class="fas fa-info-circle text-blue-400 text-xl"></i>
+        <span id="toastMessage" class="font-medium text-sm">Message</span>
+    </div>
+
+    <div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mt-4">
+        
+        <div class="space-y-8 bg-slate-900/80 backdrop-blur-md p-8 rounded-3xl border border-white/5 order-2 lg:order-1 shadow-2xl">
+            <div>
+                <h1 class="text-3xl font-bold mb-2">Générateur de <span class="text-blue-500 font-syncopate text-2xl uppercase">Badge</span></h1>
+                <p class="text-slate-400">Préparez votre profil pour le défi des 30 jours.</p>
+            </div>
+
+            <div class="space-y-5">
+                <!-- Champ Nom -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Votre Nom Complet</label>
+                    <input type="text" id="input-name" placeholder="Ex: Fatima ZAHRA" 
+                        class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
+                </div>
+
+                <!-- Champ Filière (Ajouté) -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Votre Filière / Spécialité</label>
+                    <input type="text" id="input-filiere" placeholder="Ex: Informatique de Gestion" 
+                        class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
+                </div>
+
+                <!-- Champ Photo -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-300 mb-2">Photo de Profil</label>
+                    <div class="flex items-center justify-center w-full">
+                        <label class="custom-file-upload flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-600 hover:border-blue-500 hover:bg-slate-800/80 rounded-xl bg-slate-800/50 transition-colors">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <i class="fas fa-cloud-upload-alt text-2xl mb-2 text-slate-400 group-hover:text-blue-400"></i>
+                                <p class="text-sm text-slate-300 font-medium mb-1">Cliquez pour choisir</p>
+                                <p class="text-xs text-slate-500">PNG, JPG (Format carré recommandé)</p>
+                            </div>
+                            <input type="file" id="input-photo" class="hidden" accept="image/*" />
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bouton d'exportation avec appel JS au lieu de window.print -->
+            <div class="pt-6 border-t border-white/10">
+                <button id="downloadBtn" onclick="downloadTwibbon()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(0,102,255,0.3)] hover:shadow-[0_0_30px_rgba(0,102,255,0.5)] flex justify-center items-center gap-3">
+                    <i class="fas fa-download"></i> <span id="btnText">Télécharger mon Badge</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="flex flex-col items-center order-1 lg:order-2">
+            
+            <div id="twibbon-card" class="rounded-2xl shadow-[0_0_50px_rgba(0,102,255,0.15)]">
+                <div class="tech-grid"></div>
+                <div class="diagonal-stripes"></div>
+
+                <!-- Header Labels -->
+                <div class="absolute top-8 left-0 right-0 z-20 flex flex-col items-center text-center px-4">
+                    <h2 class="font-syncopate text-xs tracking-[0.4em] text-white opacity-80 mb-2 uppercase">Campus Skill Challenge</h2>
+                    <div class="info-pill bg-blue-600 border-none px-6 py-1 tracking-widest text-[10px]">
+                        3 CERTIFICATIONS / 30 JOURS
+                    </div>
+                </div>
+
+                <!-- Side Text (Vertical) -->
+                <div class="side-label font-syncopate uppercase">
+                    <i class="fas fa-chevron-left mr-2"></i> JE PARTICIPE <i class="fas fa-chevron-right ml-2 text-blue-400"></i>
+                </div>
+
+                <!-- Floating Logos -->
+                <div class="logo-floating top-[45%] left-4 text-blue-500">
+                    <i class="fas fa-certificate text-xl"></i>
+                </div>
+                <div class="logo-floating top-[22%] right-10 text-orange-500">
+                    <i class="fas fa-rocket text-xl"></i>
+                </div>
+                <div class="logo-floating bottom-[15%] right-20 text-cyan-400">
+                    <i class="fas fa-trophy text-xl"></i>
+                </div>
+
+                <!-- Cadre Photo -->
+                <div class="profile-wrapper">
+                    <!-- Image de placeholder par défaut -->
+                    <img id="profile-preview" src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=1000&auto=format&fit=crop" alt="Profile">
+                    
+                    <!-- Overlay sombre pour la lisibilité du texte -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-20" style="clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%);"></div>
+
+                    <!-- Overlay de nom sur la photo -->
+                    <div class="absolute bottom-6 left-6 right-6 z-30">
+                        <div id="display-name" class="font-syncopate text-2xl font-bold text-orange-500 mb-0 truncate drop-shadow-md">VOTRE NOM</div>
+                        <div id="display-filiere" class="text-sm font-medium text-blue-300 mb-2 truncate drop-shadow-md">Votre Filière</div>
+                        <div class="text-[9px] tracking-[0.3em] uppercase text-white/80">Challenge de Compétences 2024</div>
+                    </div>
+                </div>
+
+                <!-- Footer : Labels -->
+                <div class="absolute bottom-8 left-8 right-8 z-20 flex justify-between items-end">
+                    <div class="space-y-2">
+                        <div class="info-pill orange-pill text-[9px] inline-block">CERTIFICATIONS INTERNATIONALES</div>
+                        <div class="text-[10px] text-white/60 uppercase font-bold tracking-tighter">Google, IBM, Cisco</div>
+                    </div>
+
+                    <div class="text-right space-y-2">
+                        <div class="info-pill text-[9px] inline-block bg-white/5 border-white/20">FORGEZ VOS SKILLS</div>
+                        <div class="text-[10px] text-white/60 uppercase font-bold tracking-tighter">Au-delà du diplôme</div>
+                    </div>
+                </div>
+
+                <!-- Logo Organisateur (Top Right) -->
+                <div class="absolute top-0 right-0 w-24 h-24 bg-white/10 backdrop-blur-md border-b border-l border-white/10 z-20 flex flex-col items-center justify-center rounded-bl-3xl">
+                    <i class="fas fa-graduation-cap text-blue-400 text-2xl drop-shadow-lg"></i>
+                    <span class="text-[8px] font-black text-white leading-none text-center mt-1 tracking-widest">CAMPUS<br>SKILL</span>
+                </div>
+            </div>
+
+            <p class="mt-6 text-slate-500 text-sm flex items-center gap-2">
+                <i class="fas fa-shield-alt"></i> Génération locale sécurisée. Aucune donnée n'est envoyée.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Système de notification Toast
+        function showNotification(message, type = 'error') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            toastMessage.textContent = message;
+            
+            if(type === 'error') {
+                toastIcon.className = "fas fa-exclamation-circle text-red-400 text-xl";
+                toast.classList.replace('border-slate-700', 'border-red-900/50');
+            } else {
+                toastIcon.className = "fas fa-check-circle text-green-400 text-xl";
+                toast.classList.replace('border-slate-700', 'border-blue-900/50');
+            }
+
+            toast.classList.add('toast-enter');
+            
+            setTimeout(() => {
+                toast.classList.remove('toast-enter');
+                setTimeout(() => {
+                    toast.classList.remove('border-red-900/50', 'border-blue-900/50');
+                    toast.classList.add('border-slate-700');
+                }, 300);
+            }, 3500);
+        }
+
+        // Récupération des éléments DOM
+        const inputName = document.getElementById('input-name');
+        const inputFiliere = document.getElementById('input-filiere');
+        const displayName = document.getElementById('display-name');
+        const displayFiliere = document.getElementById('display-filiere');
+        const inputPhoto = document.getElementById('input-photo');
+        const profilePreview = document.getElementById('profile-preview');
+
+        // Mise à jour du nom
+        inputName.addEventListener('input', (e) => {
+            const val = e.target.value.toUpperCase();
+            displayName.innerText = val || "VOTRE NOM";
+        });
+
+        // Mise à jour de la filière
+        inputFiliere.addEventListener('input', (e) => {
+            const val = e.target.value;
+            displayFiliere.innerText = val || "Votre Filière";
+        });
+
+        // Gestion de l'upload de photo
+        inputPhoto.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const file = this.files[0];
+                
+                // Vérification basique du type
+                if (!file.type.startsWith('image/')) {
+                    showNotification("Veuillez sélectionner une image valide.", "error");
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profilePreview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Fonction de génération d'image via html2canvas
+        async function downloadTwibbon() {
+            const btn = document.getElementById('downloadBtn');
+            const btnText = document.getElementById('btnText');
+            const node = document.getElementById('twibbon-card');
+            
+            // Vérification
+            if(inputName.value.trim() === '' || inputFiliere.value.trim() === '') {
+                showNotification("Pensez à remplir votre Nom et votre Filière.", "error");
+            }
+
+            // État de chargement
+            const originalText = btnText.innerText;
+            btnText.innerText = 'Génération en cours...';
+            btn.disabled = true;
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
+            
+            // Forcer un rendu net en ajustant temporairement le style pour la capture
+            const originalBorderRadius = node.style.borderRadius;
+            // Html2Canvas gère parfois mal les bords très arrondis combinés aux ombres pendant la capture
+            node.style.borderRadius = '0px';
+
+            try {
+                const canvas = await html2canvas(node, {
+                    scale: 3, // Haute résolution (Scale 3 = qualité x3)
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: "#05070A", // Couleur de fond exacte
+                    logging: false
+                });
+                
+                // Créer le lien de téléchargement
+                const link = document.createElement('a');
+                const safeName = inputName.value.trim().replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'participant';
+                link.download = `CyberBadge_CSC_${safeName}.png`;
+                link.href = canvas.toDataURL('image/png', 1.0);
+                
+                // Déclencher le téléchargement
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showNotification('Votre badge cyber a été généré avec succès !', 'success');
+
+            } catch(e) {
+                console.error("Erreur html2canvas:", e);
+                showNotification("Une erreur est survenue lors de la création de l'image.", "error");
+            } finally {
+                // Restaurer l'état
+                node.style.borderRadius = originalBorderRadius;
+                btnText.innerText = originalText;
+                btn.disabled = false;
+                btn.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        }
+    </script>
+</body>
+</html>

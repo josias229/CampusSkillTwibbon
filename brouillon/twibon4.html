@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Skill Challenge - Generator</title>
+    <!-- Polices -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2canvas pour la génération de l'image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        :root {
+            --brand-blue: #0f172a;
+            --brand-accent: #38bdf8;
+            --brand-gold: #fbbf24;
+            --twibbon-blue-dark: #0a1e42;
+            --twibbon-blue-light: #184b8c;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #020617;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Police spécifique pour le Twibbon pour respecter l'image d'origine */
+        .font-poppins {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Styles de l'interface */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Grille de fond du Twibbon */
+        .twibbon-grid {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        /* Conteneur de prévisualisation (Responsive) */
+        .preview-container {
+            width: 100%;
+            max-width: 450px;
+            aspect-ratio: 4/5;
+            position: relative;
+            border-radius: 2rem;
+            overflow: hidden;
+            box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255,255,255,0.1);
+            background-color: var(--twibbon-blue-dark);
+        }
+
+        /* Le Node réel du Twibbon (Toujours 800x1000, mis à l'échelle en CSS) */
+        #twibbon-node {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 800px;
+            height: 1000px;
+            transform-origin: top left;
+            background: radial-gradient(circle at center, var(--twibbon-blue-light) 0%, var(--twibbon-blue-dark) 100%);
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Toast de notification */
+        .toast-enter {
+            opacity: 1 !important;
+            transform: translate(-50%, 0) !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 py-12">
+
+    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 -translate-y-8 opacity-0 bg-slate-800 text-white px-6 py-4 rounded-2xl shadow-2xl border border-slate-700 z-50 transition-all duration-300 flex items-center gap-3 pointer-events-none">
+        <i id="toastIcon" class="fas fa-info-circle text-sky-400 text-xl"></i>
+        <span id="toastMessage" class="font-medium text-sm">Message</span>
+    </div>
+
+    <!-- Wrapper Principal -->
+    <div class="max-w-6xl w-full grid lg:grid-cols-2 gap-12 items-center">
+        
+        <!-- ================= COLONNE GAUCHE: CONTRÔLES ================= -->
+        <div class="space-y-8 order-2 lg:order-1">
+            <div>
+                <h1 class="text-4xl font-extrabold mb-4 text-white">Personnalisez votre <span class="text-sky-400">Badge</span></h1>
+                <p class="text-slate-400 text-lg">Rejoignez le Campus Skill Challenge. Complétez vos informations pour générer votre visuel officiel.</p>
+            </div>
+
+            <!-- Formulaire -->
+            <div class="space-y-5 bg-white/[0.02] p-8 rounded-3xl border border-white/[0.05]">
+                
+                <!-- Champ Nom -->
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-slate-300">Vos Nom et Prénoms</label>
+                    <input type="text" id="nameInput" placeholder="Ex: Jean-Marc SIKA" 
+                           class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-5 py-4 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 outline-none transition-all text-white placeholder-slate-500">
+                </div>
+
+                <!-- Nouveau Champ: Filière -->
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-slate-300">Votre Filière / Spécialité</label>
+                    <input type="text" id="filiereInput" placeholder="Ex: Informatique de Gestion" 
+                           class="w-full bg-slate-900/80 border border-slate-700 rounded-xl px-5 py-4 focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 outline-none transition-all text-white placeholder-slate-500">
+                </div>
+                
+                <!-- Champ Image -->
+                <div>
+                    <label class="block text-sm font-semibold mb-2 text-slate-300">Photo de Profil</label>
+                    <div class="flex items-center gap-4">
+                        <label class="flex-1 cursor-pointer bg-slate-800/50 hover:bg-slate-700/80 border-2 border-dashed border-slate-600 rounded-xl p-6 text-center transition-all group">
+                            <div class="w-12 h-12 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                                <i class="fas fa-camera text-sky-400"></i>
+                            </div>
+                            <span class="text-sm text-slate-300 font-medium block mb-1">Cliquez pour choisir une image</span>
+                            <span class="text-xs text-slate-500">Format portrait ou carré recommandé (JPG, PNG)</span>
+                            <input type="file" id="imageInput" class="hidden" accept="image/*">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-2 flex flex-wrap items-center gap-6">
+                <!-- Bouton Télécharger -->
+                <button id="downloadBtn" onclick="downloadTwibbon()" class="bg-white text-slate-900 px-8 py-4 rounded-xl font-bold hover:bg-sky-400 hover:text-white transition-all duration-300 flex items-center gap-3 shadow-[0_0_40px_rgba(56,189,248,0.2)] hover:shadow-[0_0_40px_rgba(56,189,248,0.4)] hover:-translate-y-1">
+                    <i class="fas fa-download"></i> <span>Télécharger l'image</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= COLONNE DROITE: LE TWIBBON ================= -->
+        <div class="flex justify-center order-1 lg:order-2">
+            
+            <!-- Conteneur qui maintient le ratio et masque le débordement -->
+            <div class="preview-container" id="preview-container">
+                
+                <!-- LE TWIBBON RÉEL (800x1000) mis à l'échelle -->
+                <div id="twibbon-node" class="font-poppins">
+                    
+                    <!-- Fond technique (Grille & Lumière) -->
+                    <div class="absolute inset-0 twibbon-grid pointer-events-none z-0"></div>
+                    <i class="fas fa-lightbulb absolute -right-[60px] top-[300px] text-[450px] text-white/[0.03] -rotate-12 pointer-events-none z-0"></i>
+
+                    <!-- HEADER GAUCHE : Contacts -->
+                    <div class="absolute top-[40px] left-[40px] text-white z-20 space-y-2">
+                        <div class="flex items-center gap-3 text-[18px]">
+                            <div class="bg-white text-[var(--twibbon-blue-light)] w-8 h-8 rounded-full flex items-center justify-center">
+                                <i class="fab fa-linkedin-in text-sm"></i>
+                            </div>
+                            <div class="bg-white text-[var(--twibbon-blue-light)] w-8 h-8 rounded-full flex items-center justify-center">
+                                <i class="fab fa-facebook-f text-sm"></i>
+                            </div>
+                            <span class="font-medium">@campus_skill_challenge</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-[18px] mt-2">
+                            <i class="fab fa-whatsapp text-[28px]"></i>
+                            <span class="font-medium">(+229) 0190530822 / 0162328725</span>
+                        </div>
+                    </div>
+
+                    <!-- HEADER DROIT : Logo Box -->
+                    <div class="absolute top-0 right-[40px] bg-white w-[180px] pt-8 pb-5 rounded-b-[20px] flex flex-col items-center z-20 shadow-2xl">
+                        <i class="fas fa-graduation-cap text-[40px] text-[var(--twibbon-blue-light)] mb-2"></i>
+                        <h2 class="text-[var(--twibbon-blue-dark)] text-[20px] font-black leading-[1.1] text-center tracking-tight">
+                            CAMPUS<br>SKILL<br>CHALLENGE
+                        </h2>
+                        <div class="w-10 h-1 bg-sky-400 mt-3 rounded-full"></div>
+                    </div>
+
+                    <!-- CADRE PHOTO -->
+                    <div class="absolute top-[140px] left-1/2 -translate-x-1/2 w-[400px] h-[400px] z-10">
+                        <div class="w-full h-full bg-black rounded-3xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative">
+                            <img id="previewImg" src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=800&q=80" 
+                                 class="w-full h-full object-cover">
+                            
+                            <!-- Overlay subtil pour le contraste -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                        </div>
+
+                        <!-- Coins de cadrage -->
+                        <div class="absolute -top-2 -left-2 w-10 h-10 border-t-[6px] border-l-[6px] border-white/40 rounded-tl-xl pointer-events-none"></div>
+                        <div class="absolute -top-2 -right-2 w-10 h-10 border-t-[6px] border-r-[6px] border-white/40 rounded-tr-xl pointer-events-none"></div>
+                        <div class="absolute -bottom-2 -left-2 w-10 h-10 border-b-[6px] border-l-[6px] border-white/40 rounded-bl-xl pointer-events-none"></div>
+                        <div class="absolute -bottom-2 -right-2 w-10 h-10 border-b-[6px] border-r-[6px] border-white/40 rounded-br-xl pointer-events-none"></div>
+                    </div>
+
+                    <!-- NOUVELLE ZONE TYPOGRAPHIQUE DE LA PHRASE -->
+                    <div class="absolute top-[570px] w-full px-[60px] text-center flex flex-col items-center justify-center z-20">
+                        <div class="bg-black/20 backdrop-blur-sm border border-white/10 rounded-3xl p-6 shadow-2xl">
+                            <p class="text-[23px] text-white leading-relaxed drop-shadow-md font-medium">
+                                Je suis 
+                                <span id="textName" class="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-sky-500 whitespace-nowrap">[Nom et Prénoms]</span>, 
+                                étudiant(e) en 
+                                <span id="textFiliere" class="font-extrabold text-[var(--brand-gold)] whitespace-nowrap">[Filière]</span>,
+                                <br>
+                                je participe au <span class="font-black text-white uppercase tracking-wider">Campus Skill Challenge</span>, 
+                                <br>
+                                <span class="text-[19px] text-slate-200 mt-1 inline-block">
+                                    un défi de 30 jours qui consiste à obtenir 2 à 3 certifications internationales gratuites 
+                                    <span class="text-sky-300 font-semibold">(Google, IBM, Cisco)</span>.
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- BOÎTE DES PARTENAIRES & CERTIFICATIONS -->
+                    <div class="absolute bottom-[35px] left-1/2 -translate-x-1/2 w-[680px] bg-white/95 backdrop-blur-sm rounded-[24px] py-4 px-6 shadow-2xl z-20 border border-white/50">
+                        
+                        <!-- Ligne 1: Certifications -->
+                        <h3 class="text-[#e67e22] text-[10px] font-bold tracking-[0.2em] text-center uppercase mb-2">Certifications</h3>
+                        <div class="flex justify-center items-center gap-5 flex-wrap">
+                            <span class="text-[#0056D2] font-black text-[16px] tracking-tight">coursera</span>
+                            <span class="text-[#0f172a] font-black text-[18px] tracking-tighter">IBM</span>
+                            <span class="text-[#00bceb] font-black text-[14px] flex items-center gap-1 font-sans"><i class="fas fa-network-wired text-[#0f172a] text-[12px]"></i> CISCO</span>
+                            <span class="text-[#FF9900] font-black text-[16px]">aws</span>
+                            <span class="text-[#0a0a23] font-bold text-[13px]"><i class="fab fa-free-code-camp mr-1 text-[14px]"></i>freeCodeCamp</span>
+                            <span class="text-gray-700 font-bold text-[14px] flex items-center gap-1"><i class="fab fa-windows text-[#00a4ef]"></i> Microsoft</span>
+                            <span class="text-gray-700 font-bold text-[14px] flex items-center gap-1"><i class="fab fa-google text-[#ea4335]"></i> Google</span>
+                        </div>
+
+                        <!-- Divider -->
+                        <div class="w-full h-[1px] bg-gradient-to-r from-transparent via-gray-300 to-transparent my-3"></div>
+
+                        <!-- Ligne 2: Partenaires -->
+                        <h3 class="text-[#e67e22] text-[10px] font-bold tracking-[0.2em] text-center uppercase mb-2">Partenaires</h3>
+                        <div class="flex justify-center items-center gap-8">
+                            <span class="text-[#003366] font-black text-[15px] flex items-center gap-1">
+                                <i class="fas fa-chart-network text-[#00FF00]"></i> USD's
+                            </span>
+                            <span class="text-gray-800 font-bold text-[14px]">
+                                <span class="text-[#f39c12]">Ste SIKA</span> COMPANY SARL
+                            </span>
+                            <span class="text-gray-900 font-black text-[16px] flex items-end">
+                                <span class="text-blue-700 text-xl leading-[0.8] mr-[1px]">J</span>k-Nexa
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Système de notification (remplace alert)
+        function showNotification(message, type = 'error') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            toastMessage.textContent = message;
+            
+            if(type === 'error') {
+                toastIcon.className = "fas fa-exclamation-circle text-red-400 text-xl";
+                toast.classList.replace('border-slate-700', 'border-red-900/50');
+            } else {
+                toastIcon.className = "fas fa-check-circle text-green-400 text-xl";
+                toast.classList.replace('border-slate-700', 'border-green-900/50');
+            }
+
+            toast.classList.add('toast-enter');
+            
+            setTimeout(() => {
+                toast.classList.remove('toast-enter');
+                // Réinitialiser la bordure après animation
+                setTimeout(() => {
+                    toast.classList.remove('border-red-900/50', 'border-green-900/50');
+                    toast.classList.add('border-slate-700');
+                }, 300);
+            }, 3500);
+        }
+
+        // LOGIQUE DE MISE À L'ÉCHELLE (Responsive Preview)
+        const container = document.getElementById('preview-container');
+        const node = document.getElementById('twibbon-node');
+
+        function scaleTwibbon() {
+            const scale = container.clientWidth / 800;
+            node.style.transform = `scale(${scale})`;
+        }
+
+        window.addEventListener('resize', scaleTwibbon);
+        scaleTwibbon();
+
+        // LOGIQUE DES INPUTS UTILISATEURS
+        const nameInput = document.getElementById('nameInput');
+        const filiereInput = document.getElementById('filiereInput');
+        const textName = document.getElementById('textName');
+        const textFiliere = document.getElementById('textFiliere');
+        
+        const imageInput = document.getElementById('imageInput');
+        const previewImg = document.getElementById('previewImg');
+
+        // Mise à jour du nom en temps réel
+        nameInput.addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            textName.textContent = val ? val : "[Nom et Prénoms]";
+        });
+
+        // Mise à jour de la filière en temps réel
+        filiereInput.addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            textFiliere.textContent = val ? val : "[Filière]";
+        });
+
+        // Gestion de l'upload d'image
+        imageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    showNotification('Veuillez sélectionner un fichier image valide.', 'error');
+                    this.value = ''; // Reset input
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // LOGIQUE DE TÉLÉCHARGEMENT HD (html2canvas)
+        async function downloadTwibbon() {
+            const btn = document.getElementById('downloadBtn');
+            const originalContent = btn.innerHTML;
+            
+            // Vérification basique
+            if(nameInput.value.trim() === '' || filiereInput.value.trim() === '') {
+                showNotification("Veuillez remplir vos Nom et Filière avant de télécharger.", "error");
+                // On peut quand même laisser télécharger s'ils veulent le template vierge, 
+                // mais généralement il vaut mieux avertir.
+            }
+
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> <span>Génération en cours...</span>';
+            btn.disabled = true;
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
+
+            try {
+                // Réinitialiser l'échelle pour capturer en pleine résolution
+                node.style.transform = 'scale(1)';
+                
+                // Petit délai pour laisser le navigateur appliquer le scale(1)
+                await new Promise(resolve => setTimeout(resolve, 150));
+
+                const canvas = await html2canvas(node, {
+                    scale: 2, // Pour une image HD (1600x2000)
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: null,
+                    logging: false
+                });
+                
+                const link = document.createElement('a');
+                // Génération d'un nom de fichier personnalisé si le nom est renseigné
+                const safeName = nameInput.value.trim().replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'participant';
+                link.download = `Twibbon_CSC_${safeName}.png`;
+                link.href = canvas.toDataURL('image/png', 1.0);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showNotification('Votre badge a été généré avec succès !', 'success');
+
+            } catch(e) {
+                console.error("Erreur lors de la génération de l'image:", e);
+                showNotification("Erreur de génération. Vérifiez le format de votre image.", "error");
+            } finally {
+                // Rétablir l'échelle pour la prévisualisation
+                scaleTwibbon();
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+                btn.classList.remove('opacity-80', 'cursor-not-allowed');
+            }
+        }
+    </script>
+</body>
+</html>
