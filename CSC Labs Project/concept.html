@@ -43,7 +43,7 @@
     </script>
     
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: theme('colors.bg-body'); color: theme('colors.text.main'); overflow-x: hidden; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f2f4f5; color: #011031; overflow-x: hidden; }
         header { position: fixed; top: 0; width: 100%; z-index: 1000; background: transparent; border-bottom: 1px solid transparent; padding: 24px 0; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         header.scrolled { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(28, 82, 155, 0.08); padding: 16px 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         .navbar { display: flex; justify-content: space-between; align-items: center; max-width: 1240px; margin: 0 auto; padding: 0 24px; }
@@ -72,15 +72,15 @@
         .step-image.active img { transform: scale(1); }
         
         /* Mobile: default fully active style for steps */
-        .step-number { background-color: theme('colors.primary'); color: #FFFFFF; transition: all 0.4s ease; }
+        .step-number { background-color: #006ef2; color: #FFFFFF; transition: all 0.4s ease; }
         .step-text { opacity: 1; transition: all 0.4s ease; }
         
         /* Desktop: storytelling active state styles */
         @media (min-width: 1024px) {
             .step-text { opacity: 0.3; transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1), transform 0.5s cubic-bezier(0.23, 1, 0.32, 1); }
             .step-text.active { opacity: 1; transform: translateX(15px); }
-            .step-number { background-color: rgba(0, 110, 242, 0.08); color: theme('colors.primary'); }
-            .step-text.active .step-number { background-color: theme('colors.primary'); color: #FFFFFF; transform: scale(1.1); }
+            .step-number { background-color: rgba(0, 110, 242, 0.08); color: #006ef2; }
+            .step-text.active .step-number { background-color: #006ef2; color: #FFFFFF; transform: scale(1.1); }
         }
     </style>
 </head>
